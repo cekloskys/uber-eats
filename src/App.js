@@ -7,7 +7,7 @@ const { Sider, Content, Footer } = Layout;
 function App() {
   return (
     <Layout>
-      <Sider style={{height: '100vh', backgroundColor: 'white'}}>
+      <Sider style={{backgroundColor: 'white'}}>
         <Image 
           src='https://logos-world.net/wp-content/uploads/2020/11/Uber-Eats-Symbol.jpg' 
           preview={false} 
@@ -21,7 +21,7 @@ function App() {
         <Footer style={{textAlign: 'center'}}>
           Uber Eats Dashboard @2022
         </Footer>
-      </Layout>
+      </Layout> 
     </Layout>
   );
 }
