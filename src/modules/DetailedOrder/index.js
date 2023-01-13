@@ -2,7 +2,7 @@ import { Card, Descriptions, Divider, List, Button, Tag, Spin } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { DataStore } from 'aws-amplify';
-import { Order, User, OrderDish, Dish } from '../../models';
+import { Order, User, OrderDish, Dish, OrderStatus } from '../../models';
 
 const statusToColor = {
     PENDING: 'blue',
@@ -60,6 +60,27 @@ const DetailedOrder = () => {
         fetchDishes();
     }, [orderDishes]);
 
+    const acceptOrder = async () => {
+        const updateOrder = await DataStore.save(Order.copyOf(order, updated => {
+            updated.status = OrderStatus.ACCEPTED;
+        }));
+        setOrder(updateOrder);
+    };
+
+    const declineOrder = async () => {
+        const updateOrder = await DataStore.save(Order.copyOf(order, updated => {
+            updated.status = OrderStatus.DECLINED;
+        }));
+        setOrder(updateOrder);
+    };
+
+    const foodIsDone = async () => {
+        const updateOrder = await DataStore.save(Order.copyOf(order, updated => {
+            updated.status = OrderStatus.COMPLETED;
+        }));
+        setOrder(updateOrder);
+    };
+
     if (!order) {
         return <Spin size='large' />
     }
@@ -94,6 +115,7 @@ const DetailedOrder = () => {
                     type='primary'
                     size='large'
                     style={styles.button}
+                    onClick={declineOrder}
                 >
                     Decline Order
                 </Button>
@@ -102,6 +124,7 @@ const DetailedOrder = () => {
                     type='primary'
                     size='large'
                     style={styles.button}
+                    onClick={acceptOrder}
                 >
                     Accept Order
                 </Button>
@@ -110,6 +133,7 @@ const DetailedOrder = () => {
                     type='default'
                     size='large'
                     style={styles.button}
+                    onClick={foodIsDone}
                 >
                     Food Is Done
                 </Button>
