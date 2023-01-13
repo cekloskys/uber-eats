@@ -1,8 +1,16 @@
 import { Form, Input, Button, Card, InputNumber, message } from 'antd';
+import { DataStore } from 'aws-amplify';
+import { Dish } from '../../models';
+import { useRestaurantContext } from '../../context/RestaurantContext';
+import { useNavigate } from 'react-router-dom';
 
 const { TextArea } = Input;
 
 const CreateMenuItem = () => {
+
+    const navigate = useNavigate();
+
+    const { restaurant } = useRestaurantContext();
 
     const onFinish = ({name, description, price, image}) => {
         if (!name) {
@@ -17,7 +25,15 @@ const CreateMenuItem = () => {
             message.error('Price required!');
             return;
         }
+        DataStore.save(new Dish({
+            name,
+            description,
+            price,
+            image,
+            restaurantID: restaurant.id,
+        }));
         message.success('Dish created!');
+        navigate('/menu');
     }
 
     return (
